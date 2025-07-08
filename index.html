@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VNST Staking Platform</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="assets/favicon.ico">
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.7.8/dist/umd/index.min.js"></script>
+</head>
+<body>
+    <!-- नेविगेशन बार -->
+    <nav class="navbar">
+        <img src="assets/logo.png" alt="VNST Logo" class="logo">
+        <div class="menu-toggle">☰</div>
+        <ul>
+            <li><a href="#" class="active">Home</a></li>
+            <li><a href="#staking">Staking</a></li>
+            <li><a href="#rewards">Rewards</a></li>
+            <li><a href="#referrals">Referrals</a></li>
+            <li><button id="walletConnectBtn" class="wallet-connect-btn">Connect Wallet</button></li>
+        </ul>
+    </nav>
+
+    <!-- मुख्य कंटेंट -->
+    <main>
+        <!-- वेलकम सेक्शन -->
+        <section class="content-section">
+            <h2>VNST Staking Platform</h2>
+            <div class="cards-container">
+                <div class="card">
+                    <h3>Total Staked</h3>
+                    <p id="totalStaked">0 VNST</p>
+                    <p>Across all users</p>
+                </div>
+                <div class="card">
+                    <h3>Your Stake</h3>
+                    <p id="userStake">0 VNST</p>
+                    <p>Your current stake</p>
+                </div>
+                <div class="card">
+                    <h3>Your Rewards</h3>
+                    <p id="userRewards">0 VNT + 0 USDT</p>
+                    <p>Available to claim</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- स्टेकिंग सेक्शन -->
+        <section id="staking" class="content-section">
+            <h2>Stake VNST Tokens</h2>
+            <div class="cards-container">
+                <div class="card">
+                    <h3>Stake Now</h3>
+                    <div class="form-group">
+                        <input type="number" id="stakeAmount" placeholder="Amount to stake" min="100" step="1">
+                        <input type="text" id="referrerAddress" placeholder="Referrer address (optional)">
+                        <button id="approveBtn" class="btn">Approve VNST</button>
+                        <button id="stakeBtn" class="btn" disabled>Stake Tokens</button>
+                    </div>
+                    <p>Min: 100 VNST | Max: 10,000 VNST</p>
+                </div>
+                <div class="card">
+                    <h3>Your Stake Details</h3>
+                    <p>Staked: <span id="stakedAmount">0</span> VNST</p>
+                    <p>Start Time: <span id="stakeStartTime">-</span></p>
+                    <p>Last Claim: <span id="lastClaimTime">-</span></p>
+                    <button id="emergencyWithdrawBtn" class="btn" disabled>Emergency Withdraw</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- रिवॉर्ड्स सेक्शन -->
+        <section id="rewards" class="content-section">
+            <h2>Claim Your Rewards</h2>
+            <div class="cards-container">
+                <div class="card">
+                    <h3>VNT Rewards</h3>
+                    <p><span id="pendingVNT">0</span> VNT</p>
+                    <p>Claimable: <span id="claimableVNT">0</span> VNT</p>
+                    <button id="claimVNTBtn" class="btn" disabled>Claim VNT</button>
+                </div>
+                <div class="card">
+                    <h3>USDT Rewards</h3>
+                    <p><span id="pendingUSDT">0</span> USDT</p>
+                    <p>Claimable: <span id="claimableUSDT">0</span> USDT</p>
+                    <button id="claimUSDTBtn" class="btn" disabled>Claim USDT</button>
+                </div>
+                <div class="card">
+                    <h3>Reward Stats</h3>
+                    <p>APY: <span id="apyPercent">200%</span></p>
+                    <p>Daily ROI: <span id="dailyROI">2%</span></p>
+                    <p>Last Claim: <span id="rewardLastClaim">-</span></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- रेफरल सेक्शन -->
+        <section id="referrals" class="content-section">
+            <h2>Your Referrals</h2>
+            <div class="cards-container">
+                <div class="card">
+                    <h3>Direct Members</h3>
+                    <p><span id="directMembers">0</span> Users</p>
+                    <p>Earnings: <span id="directEarnings">0</span> USDT</p>
+                </div>
+                <div class="card">
+                    <h3>Referral Link</h3>
+                    <input type="text" id="referralLink" readonly>
+                    <button id="copyReferralBtn" class="btn">Copy Link</button>
+                    <p>Earn 5% on direct referrals</p>
+                </div>
+                <div class="card">
+                    <h3>Level Benefits</h3>
+                    <ul>
+                        <li>Level 1: 5% Direct</li>
+                        <li>Level 2: 3% Team</li>
+                        <li>Level 3: 2% Team</li>
+                        <li>Level 4-5: 1% Team</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- वॉलेट कनेक्ट मॉडल -->
+        <div id="walletModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2>Connect Your Wallet</h2>
+                <div class="wallet-options">
+                    <button id="metamaskBtn" class="wallet-btn">
+                        <img src="assets/metamask.svg" alt="MetaMask"> MetaMask
+                    </button>
+                    <button id="walletConnectBtn" class="wallet-btn">
+                        <img src="assets/walletconnect.svg" alt="WalletConnect"> WalletConnect
+                    </button>
+                    <button id="trustWalletBtn" class="wallet-btn">
+                        <img src="assets/walletconnect.svg" alt="Trust Wallet"> Trust Wallet
+                    </button>
+                    <button id="binanceChainBtn" class="wallet-btn">
+                        <img src="assets/walletconnect.svg" alt="Binance Chain"> Binance Chain
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- फुटर -->
+    <footer>
+        <p>© 2025 VNST Staking Platform. All rights reserved.</p>
+        <p>Contract Address: <span id="contractAddress">0x...</span></p>
+    </footer>
+
+    <!-- स्क्रिप्ट्स -->
+    <script src="app.js"></script>
+</body>
+</html>
