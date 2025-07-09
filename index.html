@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VNST Staking - Testnet</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="assets/favicon.ico">
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.8.0/dist/web3.min.js"></script>
+    <script src="https://unpkg.com/@walletconnect/web3-provider@1.7.8/dist/umd/index.min.js"></script>
+    <script src="https://unpkg.com/@walletconnect/modal@2.0.0/dist/umd/index.min.js"></script>
+</head>
+<body>
+    <!-- नेविगेशन बार -->
+    <nav class="navbar">
+        <img src="assets/logo.png" alt="VNST Logo" class="logo">
+        <div class="menu-toggle">☰</div>
+        <ul>
+            <li><a href="#" class="active">Home</a></li>
+            <li><a href="#staking">Staking</a></li>
+            <li><a href="#rewards">Rewards</a></li>
+            <li><button id="walletConnectBtn" class="wallet-connect-btn">Connect Wallet</button></li>
+        </ul>
+    </nav>
+
+    <!-- मुख्य कंटेंट -->
+    <main>
+        <!-- वेलकम सेक्शन -->
+        <section class="content-section">
+            <h2>VNST Staking (Testnet)</h2>
+            <div class="cards-container">
+                <div class="card">
+                    <h3>Total Staked</h3>
+                    <p id="totalStaked">0 VNST</p>
+                </div>
+                <div class="card">
+                    <h3>Your Stake</h3>
+                    <p id="userStake">0 VNST</p>
+                </div>
+                <div class="card">
+                    <h3>Your Rewards</h3>
+                    <p id="userRewards">0 VNT + 0 USDT</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- स्टेकिंग सेक्शन -->
+        <section id="staking" class="content-section">
+            <h2>Stake VNST Tokens</h2>
+            <div class="cards-container">
+                <div class="card">
+                    <h3>Stake Now</h3>
+                    <div class="form-group">
+                        <input type="number" id="stakeAmount" placeholder="Amount to stake" min="100" step="1">
+                        <button id="approveBtn" class="btn">Approve VNST</button>
+                        <button id="stakeBtn" class="btn" disabled>Stake Tokens</button>
+                    </div>
+                    <p>Min: 100 VNST | Max: 10,000 VNST</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- स्क्रिप्ट्स -->
+    <script src="app.js"></script>
+</body>
+</html>
