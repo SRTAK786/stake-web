@@ -858,3 +858,22 @@ walletconnect.svg
     width: 30px;
     height: 30px;
 }
+
+/* WalletConnect मॉडल के लिए कस्टम स्टाइल */
+.walletconnect-modal__headerLogo {
+    filter: drop-shadow(0 0 5px rgba(0, 212, 255, 0.5));
+}
+
+.walletconnect-modal__mobile__toggle {
+    background: var(--card-bg);
+}
+
+.walletconnect-modal__mobile__toggle a {
+    color: var(--accent-color);
+}
+
+.walletconnect-modal__base {
+    background: var(--primary-color) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--accent-color);
+}
