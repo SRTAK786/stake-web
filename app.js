@@ -112,42 +112,46 @@ async function connectMetaMask() {
 
 // वॉलेटकनेक्ट कनेक्शन (अपडेटेड v2)
 async function connectWalletConnect() {
-    try {
-        // WalletConnect v2 प्रोवाइडर
-        walletConnectProvider = new WalletConnectProvider.default({
-            projectId: "6b5d394c8625d20907158af24ba88deb", // WalletConnect Cloud से प्राप्त करें
-            chains: [56], // BSC मेननेट के लिए
-            showQrModal: true,
-            qrModalOptions: {
-                themeMode: "dark",
-                themeVariables: {
-                    '--wcm-z-index': '9999'
-                }
-            }
-        });
-        
-        await walletConnectProvider.enable();
-        web3 = new Web3(walletConnectProvider);
-        stakingContract = new web3.eth.Contract(contractABI, contractAddress);
-        
-        accounts = await web3.eth.getAccounts();
-        walletConnectBtn.textContent = `${accounts[0].substring(0, 6)}...${accounts[0].substring(38)}`;
-        walletConnectBtn.classList.add('connected');
-        walletModal.style.display = 'none';
-        updateUI();
-        showSuccessMessage("WalletConnect connected successfully!");
-        
-        // कनेक्शन इवेंट्स
-        walletConnectProvider.on("disconnect", () => {
-            walletConnectBtn.textContent = "Connect Wallet";
-            walletConnectBtn.classList.remove('connected');
-            showErrorMessage("Wallet disconnected");
-        });
-        
-    } catch (error) {
-        console.error("Error connecting with WalletConnect:", error);
-        showErrorMessage("Failed to connect with WalletConnect");
-    }
+  try {
+    const provider = new WalletConnectProvider.default({
+      projectId: "6b5d394c8625d20907158af24ba88deb",
+      rpc: {
+        56: "https://bsc-dataseed.binance.org/",
+        97: "https://data-seed-prebsc-1-s1.binance.org:8545/"
+      },
+      chains: [56],
+      showQrModal: true,
+      qrcodeModalOptions: {
+        mobileLinks: ["metamask", "trust", "tokenpocket"]
+      },
+      metadata: {
+        name: "VNST Staking",
+        description: "VNST Token Staking Platform",
+        url: window.location.href,
+        icons: ["https://srtak786.github.io/stake-web/logo.png"]
+      }
+    });
+    
+    await provider.enable();
+    web3 = new Web3(provider);
+    accounts = await web3.eth.getAccounts();
+    
+    walletConnectBtn.textContent = `${accounts[0].substring(0, 6)}...${accounts[0].substring(38)}`;
+    walletConnectBtn.classList.add('connected');
+    walletModal.style.display = 'none';
+    
+    updateUI();
+    showSuccessMessage("WalletConnect connected successfully!");
+    
+    provider.on("disconnect", () => {
+      walletConnectBtn.textContent = "Connect Wallet";
+      walletConnectBtn.classList.remove('connected');
+    });
+    
+  } catch (error) {
+    console.error("WalletConnect Error:", error);
+    showErrorMessage("Failed to connect with WalletConnect");
+  }
 }
 
 // ट्रस्ट वॉलेट कनेक्शन
