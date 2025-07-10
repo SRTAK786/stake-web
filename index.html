@@ -11,6 +11,9 @@
     <script src="https://unpkg.com/@walletconnect/modal@2.0.0/dist/umd/index.min.js"></script>
 </head>
 <body>
+    <div id="walletInfo" class="hidden">
+        Connected: <span id="walletAddress"></span>
+    </div>
     <!-- नेविगेशन बार -->
     <nav class="navbar">
         <img src="assets/logo.png" alt="VNST Logo" class="logo">
@@ -24,7 +27,7 @@
     </nav>
 
     <!-- मुख्य कंटेंट -->
-    <main>
+    <main id="stakingInterface">
         <!-- वेलकम सेक्शन -->
         <section class="content-section">
             <h2>VNST Staking (Testnet)</h2>
@@ -52,8 +55,10 @@
                     <h3>Stake Now</h3>
                     <div class="form-group">
                         <input type="number" id="stakeAmount" placeholder="Amount to stake" min="100" step="1">
+                        <input type="text" id="referrerAddress" placeholder="Referrer Address (required)" required>
                         <button id="approveBtn" class="btn">Approve VNST</button>
                         <button id="stakeBtn" class="btn" disabled>Stake Tokens</button>
+                        <button id="claimBtn" class="btn">Claim Rewards</button>
                     </div>
                     <p>Min: 100 VNST | Max: 10,000 VNST</p>
                 </div>
@@ -62,6 +67,7 @@
     </main>
 
     <!-- स्क्रिप्ट्स -->
+    <div id="statusMessages"></div>
     <script src="app.js"></script>
 </body>
 </html>
