@@ -172,26 +172,57 @@ function resetWallet() {
 async function stakeTokens() {
     try {
         const amount = document.getElementById('stakeAmount').value;
-        const referrer = document.getElementById('referrerAddress').value || "0x0000000000000000000000000000000000000000";
-        
         if (!amount || isNaN(amount)) {
-            showMessage('Please enter a valid amount', 'error');
+            showMessage('❌ Please enter a valid amount', 'error');
             return;
         }
-        
+
         const amountWei = web3.utils.toWei(amount);
         
-        await handleTransaction(
-            stakingContract.methods.stake(amountWei, referrer).send({ from: currentAccount }),
-            'Tokens staked successfully!'
-        );
-        
+        // ✅ 1. Stake Limits
+        const minStake = await stakingContract.methods.minStakeAmount().call();
+        const maxStake = await stakingContract.methods.maxStakeAmount().call();
+
+        if (web3.utils.toBN(amountWei).lt(web3.utils.toBN(minStake))) {
+            showMessage(`❌ Minimum stake amount is ${web3.utils.fromWei(minStake)} VNST`, 'error');
+            return;
+        }
+        if (web3.utils.toBN(amountWei).gt(web3.utils.toBN(maxStake))) {
+            showMessage(`❌ Maximum stake amount is ${web3.utils.fromWei(maxStake)} VNST`, 'error');
+            return;
+        }
+
+        // ✅ 2. Referrer Address
+        const referrer = document.getElementById('referrerAddress').value || "0x0000000000000000000000000000000000000000";
+        if (!web3.utils.isAddress(referrer)) {
+            showMessage('❌ Invalid referrer address!', 'error');
+            return;
+        }
+
+        // ✅ 3. Token Approval (If Needed)
+        const vnstTokenAddress = await stakingContract.methods.vnstToken().call();
+        const vnstToken = new web3.eth.Contract(ERC20_ABI, vnstTokenAddress);
+
+        const allowance = await vnstToken.methods.allowance(currentAccount, contractAddress).call();
+        if (web3.utils.toBN(allowance).lt(web3.utils.toBN(amountWei))) {
+            showMessage('🔄 Approving VNST tokens...', 'status');
+            await vnstToken.methods.approve(contractAddress, web3.utils.toWei('1000000')).send({ from: currentAccount });
+            showMessage('✅ VNST tokens approved!', 'success');
+        }
+
+        // ✅ 4. Stake
+        await stakingContract.methods.stake(amountWei, referrer)
+            .send({ from: currentAccount });
+
+        showMessage('✅ Stake successful!', 'success');
         updateUI();
+
     } catch (error) {
         if (error.code === 4001) {
-            showMessage('User rejected transaction', 'error');
+            showMessage('❌ User rejected transaction', 'error');
         } else {
-            showMessage(`Staking failed: ${error.message}`, 'error');
+            console.error(error);
+            showMessage('❌ Staking failed: ' + error.message, 'error');
         }
     }
 }
